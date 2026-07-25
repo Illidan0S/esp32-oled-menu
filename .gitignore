@@ -1,0 +1,9 @@
+# File temporanei generati dall'Arduino IDE
+*.ino.eep
+*.ino.elf
+*.ino.hex
+*.ino.map
+
+# File del sistema operativo
+.DS_Store
+Thumbs.db
