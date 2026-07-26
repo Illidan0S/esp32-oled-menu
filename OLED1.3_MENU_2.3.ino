@@ -1,9 +1,11 @@
 /*
-* 16-07-2026  -> 00:05
-* versione 2.3
-* Versione precedente: 2.2
+* 26-07-2026  : 22:20 -> 00:40
+* versione 2.4
+* Versione precedente: 2.3
 * Aggiornamenti:
-**  Migliorata  gestione WiFi
+**  Aggiunta Light Sleep mode
+**  nuova funzione che gestisce il volume
+**  migliorata gestione case Bro
 */
 
 #include <Wire.h>
@@ -20,13 +22,15 @@
 #define SCREEN_HEIGHT 64
 
 //Bottoni
-#define BTU 19 //Bottone che va su
-#define BTD 18 //Bottone che va giù
-#define BTC 5  //Bottone di conferma
-#define BTB 15  //Bottone back
-#define I2S_BLCK 27     // BCK
-#define I2S_LRC 25      // LCK
-#define I2S_DOUT 26     // DIN
+#define BTU 32  //Bottone che va su
+#define BTD 33  //Bottone che va giù
+#define BTC 25  //Bottone di conferma
+#define BTB 26  //Bottone back
+
+//audio
+#define I2S_BLCK 18     // BCK
+#define I2S_LRC 19      // LCK
+#define I2S_DOUT 21     // DIN
 
 Audio audio;
 Adafruit_SH1106G display(SCREEN_WIDTH ,SCREEN_HEIGHT ,&Wire, -1);
@@ -116,6 +120,23 @@ bool statoAttB=true;
 float temp = 0.0; // temperatura in gradi celsius
 float umid = 0.0; // umidità
 
+void gest_vol(){
+  if (statoAttU == false && millis()-tempo>200){
+          tempo=millis();
+          volume+=1;
+          if (volume>21)
+            volume=21;
+            st_volume();
+            display.display();
+      } else if (statoAttD == false && millis()-tempo>200){
+            tempo=millis();
+            volume-=1;
+            if (volume<0)
+              volume=0;
+            st_volume();
+            display.display();
+          }
+}
 
 void st_volume(){
   display.fillRect(48,18,70,25,SH110X_BLACK);
@@ -306,6 +327,9 @@ void loop() {
   statoAttC=digitalRead(BTC);
   statoAttB=digitalRead(BTB);
 
+
+  
+
   if (schermata == 0){
 
     if (statoAttD == false && millis()-tempo>200){
@@ -354,21 +378,7 @@ void loop() {
               display.display();
 
             }
-            if (statoAttU == false && millis()-tempo>200){
-              tempo=millis();
-              volume+=1;
-              if (volume>21)
-                volume=21;
-              st_volume();
-              display.display();
-            } else if (statoAttD == false && millis()-tempo>200){
-                tempo=millis();
-                volume-=1;
-                if (volume<0)
-                  volume=0;
-                st_volume();
-                display.display();
-            }
+            gest_vol();
             break;
 
         case CANZONI:
@@ -416,15 +426,22 @@ void loop() {
         break;
 
         case BRO:
-          if (st_bro==false){
-            tempoFace=millis();
-            st_bro=true;
+          if (st_bro == false) {
+            tempoFace = millis();
+            st_bro = true;
+
+            roboEyes.setIdleMode(ON, 2, 1);// Cambia direzione ogni 2-3 secondi
+            // Lampeggia ogni 2-3 secondi
+            roboEyes.setAutoblinker(ON, 2, 1);
           }
-          if (millis()-tempoFace>random(5000,10000)){
-            tempoFace= millis();
-            int i = random(4);
-            roboEyes.setMood(moods[i]);
+
+          if (millis() - tempoFace > random(4000,8000)) {// Cambia espressione ogni 4-8 secondi
+            tempoFace = millis();
+
+            int umoreCasuale = random(4);
+            roboEyes.setMood(moods[umoreCasuale]);
           }
+
           roboEyes.update();
         break;
 
@@ -469,9 +486,6 @@ void loop() {
             display.display();
           }
         break;
-
-
-
 
 
         case WIFI:
@@ -579,21 +593,8 @@ void loop() {
     statoPrecB = statoAttB;
   } else if (schermata == 2){
 
-      if (statoAttU == false && millis()-tempo>200){
-          tempo=millis();
-          volume+=1;
-          if (volume>21)
-            volume=21;
-            st_volume();
-            display.display();
-          } else if (statoAttD == false && millis()-tempo>200){
-              tempo=millis();
-              volume-=1;
-              if (volume<0)
-                volume=0;
-              st_volume();
-              display.display();
-      } else if (statoAttB == false && statoPrecB == true && millis()-tempo>300){
+      gest_vol();
+      if (statoAttB == false && statoPrecB == true && millis()-tempo>300){
         tempo=millis();
         display.fillRect(0,0,128,64,SH110X_BLACK);
         i=0;        // indice cursore
@@ -687,4 +688,66 @@ void loop() {
   }
   
   statoPrecC = statoAttC;
+
+  
+// se non viene premuto un tasto per n secondi.... va in light sleep mode
+if (millis()-tempo>=60000){
+    Serial.println(i);
+    display.clearDisplay();
+    display.setCursor(10,10);
+    display.print("Sleep Mode");
+    display.display();
+
+    gpio_wakeup_enable((gpio_num_t)BTU, GPIO_INTR_LOW_LEVEL);
+    gpio_wakeup_enable((gpio_num_t)BTD, GPIO_INTR_LOW_LEVEL);
+    gpio_wakeup_enable((gpio_num_t)BTC, GPIO_INTR_LOW_LEVEL);
+    gpio_wakeup_enable((gpio_num_t)BTB, GPIO_INTR_LOW_LEVEL);
+
+    esp_sleep_enable_gpio_wakeup();
+
+    //display.oled_command(SH110X_DISPLAYOFF);    // spegne display
+    esp_light_sleep_start();
+    //display.oled_command(SH110X_DISPLAYON);   // riaccendo display
+    tempo=millis();
+    display.clearDisplay();
+    if (schermata == 0){
+      j=(i/5) * 5;          // indice menù
+
+      display.fillCircle(curs_x, curs_y, 2, SH110X_WHITE); // cerchio pieno
+      titolo("Menu'");
+      stampa_menu(len_lista,j,lista);
+    } else if (schermata == 1){
+
+        LargCaricamento=1;
+
+        st_aura=false;
+        st_canzoni=false;
+        st_info=false;
+        st_bro=false;
+        st_wifi = false;
+
+        titolo(lista[scelta]);
+        j=(i/5) * 5;
+        display.display();
+
+
+        if (millis() - tempoScansioneWifi > 10000 && scelta==WIFI) {
+            scanningWiFi = false;
+            WiFi.scanDelete();
+        }
+    } else if (schermata == 2){
+        display.setCursor(5,19);
+        display.print("Volume:");
+        display.setCursor(48,19);
+        display.print(volume);
+        st_volume();
+        titolo(canzoni[i]);
+    } else if (schermata == 3){
+        st_sch3=false;
+    }
+    display.display();
+  }
+
+
+
 }
