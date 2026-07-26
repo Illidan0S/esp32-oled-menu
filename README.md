@@ -38,7 +38,9 @@ La funzione WiFi guida l'utente dalla scansione delle reti fino alla visualizzaz
 - **Info**: visualizza temperatura e umidità rilevate dal sensore HTU21D.
 - **WiFi**: esegue una scansione delle reti disponibili e mostra nome, intensità del segnale e tipo di sicurezza della rete selezionata.
 
-Le voci SONAR, PIR, Termini, Condizioni ed Exit sono previste per sviluppi successivi.
+Le voci **SONAR**, **PIR**, **Termini** e **Condizioni** sono state aggiunte principalmente per creare un menu più lungo e testare la gestione dello scorrimento tra più pagine.
+
+Non è previsto, al momento, implementare SONAR o PIR in questa versione del progetto. La voce **Exit** potrebbe invece essere sviluppata in futuro per gestire l'uscita dal menu o una modalità di riposo.
 
 ## Componenti
 
