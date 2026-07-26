@@ -106,7 +106,7 @@ Le librerie `Wire`, `WiFi` e `SD_MMC` fanno parte del core ESP32 per Arduino.
 
 ## Stato del progetto
 
-Questo repository raccoglie una versione funzionante ma in evoluzione del progetto. L'obiettivo è continuare a migliorare il menu, aggiungere sensori e completare le voci già previste.
+Questo repository raccoglie una versione funzionante ma in evoluzione del progetto. L'obiettivo è consolidare le funzioni già presenti, migliorare l'interfaccia del menu e, se necessario, aggiungere la gestione dell'uscita o della modalità di riposo.
 
 Il prossimo obiettivo è trasformare il prototipo su breadboard in un dispositivo portatile e più robusto. I componenti verranno trasferiti su una scheda millefori, con collegamenti saldati in modo definitivo.
 
