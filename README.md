@@ -18,7 +18,7 @@ Il progetto è ancora in lavorazione: alcune voci del menu sono già presenti co
 
 ### Info: temperatura e umidità
 
-La schermata Info mostra i valori rilevati dal sensore HTU21D.
+La schermata Info mostra i valori rilevati dal sensore HTU2X.
 
 ![Temperatura e umidità rilevate dal sensore](images/temperatura.jpg)
 
@@ -35,7 +35,7 @@ La funzione WiFi guida l'utente dalla scansione delle reti fino alla visualizzaz
 - **Bro**: mostra occhi robotici animati sul display.
 - **AURA**: riproduce `aura.mp3` dalla microSD e consente di regolare il volume.
 - **Canzoni**: cerca nella microSD file `.mp3` e `.wav`, quindi permette di selezionarli e riprodurli.
-- **Info**: visualizza temperatura e umidità rilevate dal sensore HTU21D.
+- **Info**: visualizza temperatura e umidità rilevate dal sensore HTU2X.
 - **WiFi**: esegue una scansione delle reti disponibili e mostra nome, intensità del segnale e tipo di sicurezza della rete selezionata.
 
 Le voci **SONAR**, **PIR**, **Termini** e **Condizioni** sono state aggiunte principalmente per creare un menu più lungo e testare la gestione dello scorrimento tra più pagine.
@@ -46,7 +46,7 @@ Non è previsto, al momento, implementare SONAR o PIR in questa versione del pro
 
 - ESP32
 - Display OLED 128×64 con driver SH1106 (indirizzo I2C `0x3C`)
-- Sensore di temperatura e umidità HTU21D / HTU21DF
+- Sensore di temperatura e umidità della famiglia HTU2X
 - Modulo microSD usato in modalità SD_MMC
 - Modulo audio I2S e altoparlante
 - Quattro pulsanti
