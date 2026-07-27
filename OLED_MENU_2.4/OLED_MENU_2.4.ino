@@ -690,7 +690,7 @@ void loop() {
   statoPrecC = statoAttC;
 
   
-// se non viene premuto un tasto per n secondi.... va in light sleep mode
+// se non viene premuto un tasto per 60 secondi.... va in light sleep mode
 if (millis()-tempo>=60000){
     Serial.println(i);
     display.clearDisplay();
@@ -751,4 +751,3 @@ if (millis()-tempo>=60000){
 
 
 }
-
