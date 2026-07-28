@@ -7,3 +7,6 @@
 # File del sistema operativo
 .DS_Store
 Thumbs.db
+
+# Versioni precedenti conservate solo sul computer
+OLED_MENU_2.4/
