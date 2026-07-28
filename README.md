@@ -1,4 +1,4 @@
-# ESP32 OLED Menu — versione 2.4
+# ESP32 OLED Menu — versione 2.5
 
 Un progetto personale basato su ESP32 che usa un display OLED come interfaccia per un piccolo dispositivo multifunzione. Il menu, controllato con quattro pulsanti, permette di ascoltare musica da microSD, visualizzare temperatura e umidità, cercare reti Wi-Fi e mostrare animazioni sullo schermo.
 
@@ -37,13 +37,12 @@ La funzione WiFi guida l'utente dalla scansione delle reti fino alla visualizzaz
 - **Canzoni**: cerca nella microSD file `.mp3` e `.wav`, quindi permette di selezionarli e riprodurli.
 - **Info**: visualizza temperatura e umidità rilevate dal sensore HTU2X.
 - **WiFi**: esegue una scansione delle reti disponibili e mostra nome, intensità del segnale e tipo di sicurezza della rete selezionata.
-- **Light Sleep**: dopo 60 secondi di inattività mostra `Sleep Mode` ed entra in sospensione; la pressione di un pulsante riattiva il dispositivo.
+- **Light Sleep**: dopo 45 secondi di inattività mostra una breve animazione e poi entra in sospensione; la pressione di un pulsante riattiva il dispositivo.
 
-## Novità della versione 2.4
+## Novità della versione 2.5
 
-- Aggiunta Light Sleep mode
-- Nuova funzione che gestisce il volume
-- Migliorata gestione case Bro
+- Aggiunta una nuova animazione prima della modalità Light Sleep.
+- Ridotta a 45 secondi l'inattività necessaria per avviare la sequenza di sospensione.
 
 Le voci **SONAR**, **PIR**, **Termini** e **Condizioni** sono state aggiunte principalmente per creare un menu più lungo e testare la gestione dello scorrimento tra più pagine.
 
@@ -105,11 +104,12 @@ Le librerie `Wire`, `WiFi` e `SD_MMC` fanno parte del core ESP32 per Arduino.
 
 ## Avvio
 
-1. Aprire `OLED_MENU_2.4/OLED_MENU_2.4.ino` nell'Arduino IDE.
+1. Aprire `OLED1.3_MENU_2.5/OLED1.3_MENU_2.5.ino` nell'Arduino IDE.
 2. Selezionare una scheda ESP32 compatibile.
-3. Installare le librerie indicate sopra.
-4. Collegare i componenti e, se si usa la sezione musicale, inserire la microSD.
-5. Caricare lo sketch.
+3. Selezionare lo schema di partizione `Huge APP`.
+4. Installare le librerie indicate sopra.
+5. Collegare i componenti e, se si usa la sezione musicale, inserire la microSD.
+6. Caricare lo sketch.
 
 ## Stato del progetto
 
